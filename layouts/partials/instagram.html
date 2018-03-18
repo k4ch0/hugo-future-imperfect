@@ -1,0 +1,31 @@
+    </div>
+    <div class="row">
+        {{ $dataJ := getJSON (printf "https://api.instagram.com/v1/users/self/media/recent/?access_token=%s" .Site.Social.instatoken) }}
+        {{ range $dataJ.data }}
+        <a href="{{ .link }}" target="_new">
+
+            <div class="cover-card col-sm-4" style="background: url({{ .images.standard_resolution.url }}) no-repeat center top;background-size:cover">
+                <p>
+                    {{ with .caption }}{{ .text }}<br>
+                    -<br>{{ end }}
+                    <span class="play-date" data-date="{{ .created_time }}"></span>
+                </p>
+            </div>
+        </a>
+        {{ end }}
+    </div>
+</div>
+
+<script src="/js/jquery-1.10.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/moment.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('span.play-date').each(function(i, e) {
+            var date = moment.unix($(e).data('date'));
+            $(e).html(date.fromNow());
+        });
+    });
+</script>
+</body>
+</html>
