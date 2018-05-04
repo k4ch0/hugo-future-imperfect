@@ -1,21 +1,33 @@
     </div>
+    <style>
+    .4col
+    {
+        -webkit-column-count: 4;
+        -webkit-column-gap: 10px;
+        -moz-column-count: 4;
+        -moz-column-gap: 10px;
+        column-count:4;
+        column-gap:10px;
+    }
+    </style>
     <div class="row">
-        {{ $dataJ := getJSON (printf "https://api.instagram.com/v1/users/self/media/recent/?access_token=%s" .Site.Social.instatoken) }}
+        {{ $dataJ := getJSON (printf "https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=4" .Site.Social.instatoken) }}
         {{ range $dataJ.data }}
         <a href="{{ .link }}" target="_new">
-
-            <div class="cover-card col-sm-4" style="background: url({{ .images.standard_resolution.url }}) no-repeat center top;background-size:cover">
+            <div class="4col" style="background: url({{ .images.standard_resolution.url }}) no-repeat;background-size: 350px 350px;">
                 <p>
                     {{ with .caption }}{{ .text }}<br>
                     -<br>{{ end }}
                     <span class="play-date" data-date="{{ .created_time }}"></span>
+                    <p style="
+                        width: 306px;
+                        height: 306px;">
                 </p>
             </div>
         </a>
         {{ end }}
     </div>
-</div>
-
+    
 <script src="/js/jquery-1.10.2.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/moment.min.js"></script>
