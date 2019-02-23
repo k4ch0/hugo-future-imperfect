@@ -17,7 +17,8 @@
   <footer>
     {{ .Render "footer-category" }}
   </footer>
-
+  
+  {{ partial "related" . }}
 </article>
 {{ .Render "comments" }}
 {{ .Render "prev-next" }}
