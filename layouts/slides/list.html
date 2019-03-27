@@ -1,51 +1,38 @@
-{{ partial "general-title" . }}
+<head><meta charset="utf-8"></head>
 
-{{ partial "header" . }}
-{{ partial "navbar" . }}
-<!-- Main -->
-<div id="main">
-  <article class="post">
-    <header>
-        <div class="title">
-            {{ if $.Scratch.Get "h1" }}
-                <h1><a href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
-                {{ $.Scratch.Set "h1" false }}
-            {{ else }}
-                <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-            {{ end }}
-            {{ with .Description }}
-                <p>{{ . }}</p>
-            {{ end }}
-        </div>
-    </header>
-    <div id="content">
-      <!-- <div class="slide-index"> -->
-        {{ $cssOpts := (dict "targetPath" "css/bulma.css" "enableSourceMap" true ) }}
-        {{ $styles := resources.Get "scss/bulma.scss" | resources.ExecuteAsTemplate "style.bulma.css" . | toCSS $cssOpts }}
-        <link rel="stylesheet" href="{{ $styles.RelPermalink }}">
-          <div class="columns is-multiline">
-              {{ range .Sections }}
-              <div class="column is-one-third">
-                <div class="card">
-                  <div class="card-image">
-                    <figure class="image is-16x9">
-                      <a href="{{ .Permalink }}"><img src="{{ .URL }}{{ .Params.featured }}" alt="Slidedeck Cover Image"></a>
-                    </figure>
-                  </div>
-                  <div class="card-content">
-                    <div class="content">
-                      <p class="heading"><time datetime="{{ .Date }} ">{{ .Date.Format "January 2, 2006" }}</time></p>
-                      <h3 class="title"><a href="{{ .Permalink }}">{{ .Title | safeHTML }}</a></h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {{ end }}
-            </div>
-          <!-- </div> -->
-          <link rel="stylesheet" href="{{ .Site.BaseURL }}/css/main.css"/>
-    </div>
-  </article>
+<link rel="stylesheet" href="{{"revealjs/css/reveal.css"|relURL}}">
+<link rel="stylesheet" href="{{"revealjs/css/theme/"|relURL}}{{.Params.theme}}.css" id="theme">
+<link rel="stylesheet" href="{{"revealjs/lib/css/zenburn.css"|relURL}}">
+
+<div class="reveal">
+<div class="slides">
+<section data-markdown
+          data-separator="^---"
+          data-separator-vertical="^___"
+          data-separator-notes="^Note:">
+{{ .RawContent }}
+</section>
 </div>
-{{ partial "sidebar" . }}
-{{ partial "footer" . }}
+</div>
+<script src="{{"/revealjs/lib/js/head.min.js"|relURL}}"></script>
+<script src="{{"/revealjs/js/reveal.js"|relURL}}"></script>
+<script>
+  Reveal.initialize({
+          embedded : true,
+
+          {{ range $key, $value := .Params.revealoptions }}
+          {{ $key | safeHTML}}:{{$value }},
+          {{ end }}
+          // theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+          // Optional libraries used to extend on reveal.js
+          dependencies: [
+            { src: '{{"revealjs/lib/js/classList.js"|relURL}}"', condition: function() { return !document.body.classList; } },
+            { src: '{{"revealjs/plugin/markdown/marked.js"|relURL}}', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: '{{"revealjs/plugin/markdown/markdown.js"|relURL}}', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: '{{"revealjs/plugin/highlight/highlight.js"|relURL}}', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: '{{"revealjs/plugin/zoom-js/zoom.js"|relURL}}', async: true, condition: function() { return !!document.body.classList; } },
+            { src: '{{"revealjs/plugin/notes/notes.js"|relURL}}', async: true, condition: function() { return !!document.body.classList; } },
+            { src: '{{"revealjs/plugin/math/math.js"|relURL}}', async: true}
+          ]
+        });
+</script>
